@@ -100,12 +100,12 @@ async def ping(ctx: commands.Context):
 
 
 @bot.hybrid_command(with_app_command=True, name="get_response_by_id", description="Fetches a response by identifier")
-async def get_response_by_id(ctx: commands.Context, target_response: str = None):
-    if target_response is None:
+async def get_response_by_id(ctx: commands.Context, identifier: str = None):
+    if identifier is None:
         await ctx.send("Please provide a valid response.")
         return
     try:
-        response = reader.get_response(target_response, parsed=True)
+        response = reader.get_response(identifier)
         await send_form(ctx, response)
     except IOError as e:
         logger.warning(e.__str__())
