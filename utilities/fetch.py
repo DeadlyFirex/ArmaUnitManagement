@@ -66,7 +66,7 @@ def run():
                                                 entry["answers"][answer]["textAnswers"]["answers"][0]["value"]})
             result_parsed["responses"].append(parsed_entry)
 
-        with open("./data/responses.raw", "w") as dumper, open("./data/responses.json", "w") as dumper_2:
+        with open("./output/responses.bin", "w") as dumper, open("./data/responses.json", "w") as dumper_2:
             dumper.write(dumps(result, indent=4))
             dumper_2.write(dumps(result_parsed, indent=4))
 

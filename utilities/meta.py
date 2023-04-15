@@ -19,5 +19,5 @@ service = discovery.build('forms', 'v1', http=creds.authorize(
 
 result = service.forms().get(formId=form_id).execute()
 
-with open("../data/meta_updated.json", "w") as meta:
+with open("../output/meta.bin", "w") as meta:
     meta.write(dumps(result, indent=4))

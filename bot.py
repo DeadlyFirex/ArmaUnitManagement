@@ -123,8 +123,8 @@ async def get_response_by_count(ctx: commands.Context, number: int = None):
         return
 
 
-@bot.hybrid_command(with_app_command=True, name="refresh_forms", description="Manually refreshes the form data")
-async def refresh_forms(ctx: commands.Context):
+@bot.hybrid_command(with_app_command=True, name="refresh_responses", description="Manually refreshes the response data")
+async def refresh_responses(ctx: commands.Context):
     global forms_amount
 
     forms_amount = run()["responses"].__len__()

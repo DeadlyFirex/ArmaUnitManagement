@@ -1,0 +1,81 @@
+{
+    "formId": "1FAIpQLSeI8_vYyaJgM7SJM4Y9AWfLq",
+    "revisionId": "00000236",
+    "responderUri": "https://docs.google.com/forms/d/e/1FAIpQLSeI8_vYyaJgM7SJM4Y9AWfLqGhJ1LAKTH9v2pf8npI8VlQ/viewform",
+    "linkedSheetId": null,
+    "info": {
+        "title": "Example Form",
+        "documentTitle": "Example Form"
+    },
+    "items": {
+        "1b0f1f12": {
+            "itemId": "1b0f1f12",
+            "title": "Example choice question",
+            "titleShort": "Custom title",
+            "description": null,
+            "required": true,
+            "type": "CHOICE",
+            "isOther": false,
+            "choiceQuestion": [
+                "A",
+                "B",
+                "C"
+            ]
+        },
+        "1b10bf1c": {
+            "itemId": "1b10bf1c",
+            "title": "Example validated short text question",
+            "titleShort": "Custom title",
+            "description": null,
+            "required": true,
+            "validation": "^([A-Z])\\. ([A-Z])[^\n]*",
+            "type": "TEXT"
+        },
+        "02b12f12": {
+            "itemId": "02b12f12",
+            "title": "Example unvalidated short text question",
+            "titleShort": "Custom title",
+            "description": null,
+            "required": false,
+            "type": "TEXT"
+        },
+        "12345678": {
+            "itemId": "12345678",
+            "title": "Example integer question",
+            "titleShort": "Custom title",
+            "description": null,
+            "required": true,
+            "type": "NUMBER"
+        },
+        "1fc2cb3c": {
+            "itemId": "1fc2cb3c",
+            "title": "Example multiple choice question",
+            "titleShort": "Custom title",
+            "description": null,
+            "required": true,
+            "type": "MULTIPLE_CHOICE",
+            "isOther": false,
+            "choiceQuestion": [
+                "A",
+                "B",
+                "C"
+            ]
+        },
+        "1d24c123": {
+            "itemId": "1d24c123",
+            "title": "Example long text",
+            "titleShort": "Custom title",
+            "description": null,
+            "required": true,
+            "type": "LONG_TEXT"
+        },
+        "123cf246": {
+            "itemId": "123cf246",
+            "title": "Example non-required long text",
+            "titleShort": "Custom title",
+            "description": null,
+            "required": false,
+            "type": "LONG_TEXT"
+        }
+    }
+}
