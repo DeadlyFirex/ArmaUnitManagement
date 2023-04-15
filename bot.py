@@ -146,5 +146,10 @@ async def refresh_credentials(ctx: commands.Context):
     _ = refresh()
     logger.info(f"Refreshed credentials.")
 
+
+@refresh_credentials.error
+async def refresh_credentials_error(ctx: commands.Context, error: commands.CommandError):
+    pass
+
 logger.info("Booting up...")
 bot.run(token=cfg.bot.token)
