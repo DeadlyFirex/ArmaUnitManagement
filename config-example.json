@@ -41,6 +41,10 @@
     "form_id": "Form ID",
     "counter": "./counter",
     "refresh": 30,
+    "refresh_host": "localhost",
+    "refresh_port": [8080, 8090],
+    "refresh_logging_level": "ERROR",
+    "refresh_remote": true,
     "links": {
       "discovery": "https://forms.googleapis.com/$discovery/rest?version=v1",
       "scope": "https://www.googleapis.com/auth/forms.responses.readonly",

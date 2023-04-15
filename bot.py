@@ -9,7 +9,7 @@ from json import load
 import services.reader as reader
 
 from services.config import Config
-from utilities.fetch import run
+from utilities.fetch import run, refresh
 
 
 cfg: Config = Config("./config.json").config
@@ -59,8 +59,13 @@ async def get_responses():
     global forms_amount
     forms_amount = reader.read_number("./counter")
 
-    _ = run()["responses"].__len__()
-    if _ > forms_amount:
+    _ = run()
+    if _[3] is True:
+        await bot.get_channel(cfg.bot.channel).send(f"<@{cfg.bot.owner}>\nRefresh required! Please use the "
+                                                    f"`refresh_credentials` command.")
+        await bot.close()
+        exit(75)
+    if _[2] > forms_amount:
         response = reader.get_latest_response()
 
         embed = discord.Embed(title="Go to the form",
@@ -128,10 +133,18 @@ async def get_response_by_count(ctx: commands.Context, number: int = 0):
 async def refresh_responses(ctx: commands.Context):
     global forms_amount
 
-    forms_amount = run()["responses"].__len__()
+    forms_amount = run()[2]
     logger.info(f"Refreshed forms. {forms_amount} responses found.")
     await ctx.send(f"Refreshed forms. {forms_amount} responses found.")
 
+
+@bot.hybrid_command(with_app_command=True, name="refresh_credentials",
+                    description="Manually refreshes the credentials used to retrieve data")
+async def refresh_credentials(ctx: commands.Context):
+    await ctx.send("Refreshing credentials manually, this will make the bot "
+                   "unresponsive until you complete the process.")
+    _ = refresh()
+    logger.info(f"Refreshed credentials.")
 
 logger.info("Booting up...")
 bot.run(token=cfg.bot.token)
