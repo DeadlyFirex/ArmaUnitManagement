@@ -7,6 +7,20 @@ from httplib2 import Http
 from oauth2client import client, file, tools
 
 
+def __parse_response(response: dict) -> dict:
+    result = {
+        "responseId": response["responseId"],
+        "createTime": response["createTime"],
+        "lastSubmittedTime": response["lastSubmittedTime"],
+        "count": response["count"],
+        "answers": {}
+    }
+    for answer in response["answers"]:
+        result["answers"].update({response["answers"][answer]["questionId"]:
+                                      response["answers"][answer]["textAnswers"]["answers"][0]["value"]})
+    return result
+
+
 def run():
     config = loads(open('./config.json').read())
 
@@ -54,17 +68,7 @@ def run():
 
         for entry in result["responses"]:
             entry.update({"count": datetime_list.index(entry["responseId"])})
-            parsed_entry = {
-                "responseId": entry["responseId"],
-                "createTime": entry["createTime"],
-                "lastSubmittedTime": entry["lastSubmittedTime"],
-                "count": entry["count"],
-                "answers": {}
-            }
-            for answer in entry["answers"]:
-                parsed_entry["answers"].update({entry["answers"][answer]["questionId"]:
-                                                entry["answers"][answer]["textAnswers"]["answers"][0]["value"]})
-            result_parsed["responses"].append(parsed_entry)
+            result_parsed["responses"].append(__parse_response(entry))
 
         with open("./output/responses.bin", "w") as dumper, open("./data/responses.json", "w") as dumper_2:
             dumper.write(dumps(result, indent=4))

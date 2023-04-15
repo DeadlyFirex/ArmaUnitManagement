@@ -1,5 +1,4 @@
 from json import load
-from datetime import datetime
 
 
 def read_number(path: str) -> int:
@@ -27,53 +26,36 @@ def get_response_ids(path: str = "./data/responses.json") -> list:
             for response in result["responses"]:
                 data.append(response["responseId"])
             return data
-        else:
-            raise IOError(f"Expected dict, got {type(result)}")
+        raise IOError(f"Expected dict, got {type(result)}")
 
 
-def get_response(identifier: str, path: str = "./data/responses.json", parsed: bool = True) -> dict:
+def get_response(identifier: str, path: str = "./data/responses.json") -> dict:
     with open(path, 'r') as reader:
         result = load(reader)
         if isinstance(result, dict):
             for response in result["responses"]:
                 if response["responseId"] == identifier:
-                    if parsed:
-                        return _parse_response(response)
                     return response
             raise IOError(f"Response with id {identifier} not found")
-        else:
-            raise IOError(f"Expected dict, got {type(result)}")
+        raise IOError(f"Expected dict, got {type(result)}")
 
 
-def _parse_response(response: dict) -> dict:
-    result = {
-        "responseId": response["responseId"],
-        "createTime": response["createTime"],
-        "lastSubmittedTime": response["lastSubmittedTime"],
-        "answers": {}
-    }
-    for answer in response["answers"]:
-        result["answers"].update({response["answers"][answer]["questionId"]:
-                                  response["answers"][answer]["textAnswers"]["answers"][0]["value"]})
-    return result
-
-
-def get_latest_response(path: str = "./data/responses.json") -> dict:
-    datetime_format = "%Y-%m-%dT%H:%M:%S.%fZ"
-    latest_response = None
-    latest_datetime = datetime.strptime("1900-01-01T00:10:30.000000Z", datetime_format)
-
+def get_response_by_count(count: int, path: str = "./data/responses.json") -> dict:
     with open(path, 'r') as reader:
         result = load(reader)
         if isinstance(result, dict):
             for response in result["responses"]:
-                current_datetime = datetime.strptime(response["createTime"], datetime_format)
-                if current_datetime > latest_datetime:
-                    latest_datetime = current_datetime
-                    latest_response = response
-            return _parse_response(latest_response)
-        else:
+                if response["count"] == count:
+                    return response
+            raise IOError(f"Response with count {count} not found")
+        raise IOError(f"Expected dict, got {type(result)}")
+
+
+def get_latest_response(path: str = "./data/responses.json") -> dict:
+    with open(path, 'r') as reader:
+        result = load(reader)
+        if isinstance(result, dict):
+            for response in result["responses"]:
+                if response["count"] == read_number("./counter") - 1:
+                    return response
             raise IOError(f"Expected dict, got {type(result)}")
-
-
-
