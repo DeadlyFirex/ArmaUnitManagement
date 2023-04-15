@@ -42,12 +42,14 @@ async def send_form(ctx: commands.Context, response: dict):
 
 
 @bot.check
-async def is_privileged(ctx: commands.Context):
+async def basic_check(ctx: commands.Context):
     if ctx.author.id in privileged and ctx.guild.id == cfg.bot.guild:
+        logger.info(f"Command used by {ctx.author.display_name} ({ctx.author.id}): {ctx.command}")
         return True
-    await ctx.send("You are not allowed to use this command.", delete_after=3)
-    await ctx.message.delete(delay=3)
-    return False
+    else:
+        logger.info(f"User {ctx.author.display_name} ({ctx.author.id}) tried to use {ctx.command}")
+        await ctx.send("You are not allowed to use this command.", delete_after=3); await ctx.message.delete(delay=3)
+        return False
 
 
 @tasks.loop(seconds=cfg.forms.refresh)
@@ -128,6 +130,7 @@ async def refresh_responses(ctx: commands.Context):
     global forms_amount
 
     forms_amount = run()["responses"].__len__()
+    logger.info(f"Refreshed forms. {forms_amount} responses found.")
     await ctx.send(f"Refreshed forms. {forms_amount} responses found.")
 
 
