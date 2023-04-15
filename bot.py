@@ -4,8 +4,10 @@ from discord.ext import commands, tasks
 from loguru import logger
 
 from typing import Union
+from json import load
 
-from services.reader import *
+import services.reader as reader
+
 from services.config import Config
 from utilities.fetch import run
 
@@ -55,11 +57,11 @@ async def basic_check(ctx: commands.Context):
 @tasks.loop(seconds=cfg.forms.refresh)
 async def get_responses():
     global forms_amount
-    forms_amount = read_number("./counter")
+    forms_amount = reader.read_number("./counter")
 
     _ = run()["responses"].__len__()
     if _ > forms_amount:
-        response = get_latest_response()
+        response = reader.get_latest_response()
 
         embed = discord.Embed(title="Go to the form",
                               url=f"https://docs.google.com/forms/d/14piHUZRPa9Bst_eua2MjnNGYuf1uPaSBSIfMWrDhdug/edit"
@@ -80,7 +82,7 @@ async def on_ready():
     global forms_amount
 
     # Initialize the targeted user and guild
-    forms_amount = read_number("./counter")
+    forms_amount = reader.read_number("./counter")
 
     # Log the bot status
     logger.info(f"Logged on as {bot.user}")
@@ -103,7 +105,7 @@ async def get_response_by_id(ctx: commands.Context, target_response: str = None)
         await ctx.send("Please provide a valid response.")
         return
     try:
-        response = get_response(target_response, parsed=True)
+        response = reader.get_response(target_response, parsed=True)
         await send_form(ctx, response)
     except IOError as e:
         logger.warning(e.__str__())
@@ -114,7 +116,7 @@ async def get_response_by_id(ctx: commands.Context, target_response: str = None)
 @bot.hybrid_command(with_app_command=True, name="get_response_by_count", description="Fetches a response by count")
 async def get_response_by_count(ctx: commands.Context, number: int = 0):
     try:
-        response = get_response_by_count(number)
+        response = reader.get_response_by_count(number)
         await send_form(ctx, response)
     except (IOError, IndexError) as e:
         logger.warning(e.__str__())
