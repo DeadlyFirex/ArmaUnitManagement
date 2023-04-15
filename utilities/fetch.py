@@ -56,8 +56,8 @@ def run():
         raise ConnectionError("No response from Google.")
 
     else:
-        with open(config["forms"]["counter"], "w") as counter:
-            counter.write(str(result["responses"].__len__()))
+        with open(config["forms"]["counter"], "w") as dumper:
+            dumper.write(str(result["responses"].__len__()))
 
         datetime_list = dict()
         result_parsed = {"responses": list()}

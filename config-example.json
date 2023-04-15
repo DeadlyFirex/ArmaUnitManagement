@@ -39,7 +39,7 @@
   "forms": {
     "enabled": true,
     "form_id": "Form ID",
-    "counter": "../counter",
+    "counter": "./counter",
     "refresh": 30,
     "links": {
       "discovery": "https://forms.googleapis.com/$discovery/rest?version=v1",
