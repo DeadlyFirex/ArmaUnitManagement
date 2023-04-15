@@ -112,12 +112,9 @@ async def get_response_by_id(ctx: commands.Context, target_response: str = None)
 
 
 @bot.hybrid_command(with_app_command=True, name="get_response_by_count", description="Fetches a response by count")
-async def get_response_by_count(ctx: commands.Context, number: int = None):
-    if number is None:
-        await ctx.send("Please provide a valid response.")
-        return
+async def get_response_by_count(ctx: commands.Context, number: int = 0):
     try:
-        response = get_response(get_response_ids()[int(number)], parsed=True)
+        response = get_response_by_count(number)
         await send_form(ctx, response)
     except (IOError, IndexError) as e:
         logger.warning(e.__str__())
