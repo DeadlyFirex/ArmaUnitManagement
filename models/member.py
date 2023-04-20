@@ -1,4 +1,5 @@
-from sqlalchemy import Boolean, DateTime, Column, Integer, String, PickleType, Text
+from sqlalchemy import Boolean, DateTime, Column, Integer, String, PickleType, Text, ForeignKey
+from sqlalchemy.orm import relationship
 
 from services.utilities import Utilities
 from services.database import Base
@@ -12,8 +13,8 @@ from inspect import currentframe
 @dataclass
 class Member(Base):
     """
-    Member model representing a member of the unit.\n
-    This is either an admin, allowing to make changes to the microservice.\n
+    Member model representing a member of the unit.
+    This can be an admin, allowing to make changes to the microservice.
     """
     # TODO: Add methods to make database changes easier.
     __tablename__ = 'members'
@@ -23,24 +24,25 @@ class Member(Base):
 
     # Member specific information
     first_name: str = Column(String(50), nullable=False, unique=False)
-    nickname: str = Column(String(50), nullable=False, unique=True)
+    nickname: str = Column(String(50), nullable=True, unique=True)
     last_name: str = Column(String(50), nullable=False, unique=False)
-    username: str = Column(String(18), nullable=False, unique=True)
+    discord: str = Column(String(18), nullable=False, unique=True)
     email: str = Column(String(50), nullable=False, unique=True)
     created_at: datetime = Column(DateTime, nullable=False, default=datetime.utcnow())
+    country_iso: str = Column(String(2), nullable=False)
     country: str = Column(String(20), nullable=False)
 
     # Member information
     operator_level: int = Column(Integer, nullable=True, default=None)
     qualifications: list = Column(PickleType, nullable=False, default=[])
     title: str = Column(String(50), nullable=True, default=None)
-    rank: int = Column(Integer, nullable=False, default=1)
+    rank: str = Column(String(36), ForeignKey("ranks.uuid"), nullable=False)
     staff_shops: list = Column(PickleType, nullable=False, default=[])
     decorations: list = Column(PickleType, nullable=False, default=[])
 
     # Member in relation to unit information
-    troop: int = Column(Integer, nullable=False, default=6)
-    team: int = Column(Integer, nullable=True, default=None)
+    platoon: int = Column(String(36), ForeignKey("platoon.uuid"), nullable=False, default=6)
+    team: str = Column(String(36), ForeignKey("squads.uuid"), nullable=True, default=None)
     team_index: int = Column(Integer, nullable=True, default=None)
     recruiter: bool = Column(Boolean, nullable=False, default=False)
     leadership: bool = Column(Boolean, nullable=False, default=False)
@@ -66,6 +68,11 @@ class Member(Base):
     last_login_at: datetime = Column(DateTime, nullable=True, default=None)
     last_login_ip: str = Column(String(50), nullable=True, default=None)
     login_count: int = Column(Integer, nullable=True, default=0)
+
+    # Relationships
+    attendance_list = relationship("Attendance")
+    campaign_organizer_list = relationship("Campaign")
+    mission_organizer_list = relationship("Mission")
 
     def get_fullname(self):
         return f"{self.first_name[0]}. {self._lastname}"
